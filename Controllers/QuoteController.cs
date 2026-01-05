@@ -7,7 +7,7 @@ using WebApplication1.Controllers.Models;
 namespace WebApplication1.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/quotes/[controller]")]
     public class QuoteController : ControllerBase
     {
         private readonly QuoteDbContext _db;
@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
             _db = db;
         }
 
-        [HttpGet("quotes")]
+        [HttpGet("")]
         public async Task<IActionResult> GetQuotes()
         {
             var quotes = await _db.Quotes.ToListAsync();
@@ -29,6 +29,7 @@ namespace WebApplication1.Controllers
             return Ok(quotes); 
         }
 
+        [HttpGet("category/{category}")]
         public async Task<IActionResult> GetQuoteByCategory(string category)
         {
             var quote = await _db.Quotes.
