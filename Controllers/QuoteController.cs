@@ -73,5 +73,34 @@ namespace WebApplication1.Controllers
                 .FirstOrDefaultAsync();
             return Ok(randomQuote);
         }
+
+        [HttpPost("")]
+        public async Task<IActionResult> CreateQuote([FromBody] Quote Quote)
+        {
+            if (Quote == null)
+            {
+                return BadRequest("Quote cannot be null.");
+            }
+
+            await _db.Quotes.AddAsync(Quote);
+                        await _db.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetQuoteById), new { id = Quote.Id },
+                Quote);
+        }
+
+        public async Task<IActionResult> DeleteQuote(int id)
+        {
+            var quote = await _db.Quotes.FindAsync(id);
+
+            if (quote == null)
+            {
+                return NotFound($"Quote with ID {id} not found.");
+            }
+
+            _db.Quotes.Remove(quote);
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
